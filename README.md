@@ -126,8 +126,11 @@ Node.js v20 がインストールされている環境を準備します。
    ```
 
 1. ウェブブラウザで http://127.0.0.1:4200 (http://localhost:4200) を開き、PLATEAU 3D 都市モデルが表示されれば OK です。
+   左右ボタンのドラッグや修飾キーを使って、カメラの移動をします。
 
-1. 最後に次のコマンドも実行し、Three.js のサンプルコードと同様に表示を確認してください。
+   ![image](https://github.com/shotamatsuda/ut-lecture-2024/assets/8651513/6a4ae10f-2802-481f-8087-e67878451aed)
+
+1. 最後に次のコマンドも実行し、Three.js のサンプルコードと同様に表示を確認してください。実行する前に、前のプロセスを Kill してください。
 
    ```sh
    yarn nx serve cesium
@@ -140,3 +143,9 @@ Node.js v20 がインストールされている環境を準備します。
    ```sh
    yarn nx serve react
    ```
+
+   ![image](https://github.com/shotamatsuda/ut-lecture-2024/assets/8651513/d298ca7a-58bf-4942-9962-3362c785fda7)
+
+   ![image](https://github.com/shotamatsuda/ut-lecture-2024/assets/8651513/018fc0fe-af8f-4398-ad18-1fdacb875cd2)
+
+   ![image](https://github.com/shotamatsuda/ut-lecture-2024/assets/8651513/3f3ac210-eaef-4800-8b72-633a22e8b285)
