@@ -126,3 +126,17 @@ Node.js v20 がインストールされている環境を準備します。
    ```
 
 1. ウェブブラウザで http://127.0.0.1:4200 (http://localhost:4200) を開き、PLATEAU 3D 都市モデルが表示されれば OK です。
+
+1. 最後に次のコマンドも実行し、Three.js のサンプルコードと同様に表示を確認してください。
+
+   ```sh
+   yarn nx serve cesium
+   ```
+
+   ```sh
+   yarn nx serve deck
+   ```
+
+   ```sh
+   yarn nx serve react
+   ```
