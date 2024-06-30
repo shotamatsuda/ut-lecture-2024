@@ -1,0 +1,49 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  font-family: monospace;
+  line-height: 1.5;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  grid-auto-rows: 100% 0;
+}
+
+#__next {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 16px;
+}
+
+@keyframes flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.4;
+  }
+}
+
+#output {
+  overflow: auto;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 16px;
+  background-color: #f7f7f7;
+  font-size: 12px;
+  white-space: pre;
+
+  > * {
+    animation-name: flash;
+    animation-duration: 0.5s;
+    animation-delay: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+  }
+}
