@@ -1,4 +1,3 @@
-import { CesiumWidget } from '@cesium/engine'
 import styled from '@emotion/styled'
 import { createContext, useRef, useState, type FC, type ReactNode } from 'react'
 import { useIsomorphicLayoutEffect } from 'react-use'
@@ -6,7 +5,9 @@ import invariant from 'tiny-invariant'
 
 import '@cesium/engine/Source/Widget/CesiumWidget.css'
 
-export const CesiumContext = createContext<CesiumWidget | undefined>(undefined)
+import { CesiumRoot } from './CesiumRoot'
+
+export const CesiumContext = createContext<CesiumRoot | undefined>(undefined)
 
 const Root = styled.div`
   width: 100%;
@@ -17,11 +18,11 @@ export const Canvas: FC<{
   children?: ReactNode
 }> = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null)
-  const [cesium, setCesium] = useState<CesiumWidget>()
+  const [cesium, setCesium] = useState<CesiumRoot>()
 
   useIsomorphicLayoutEffect(() => {
     invariant(ref.current != null)
-    const cesium = new CesiumWidget(ref.current, {
+    const cesium = new CesiumRoot(ref.current, {
       msaaSamples: 4,
       useBrowserRecommendedResolution: false,
       baseLayer: false,

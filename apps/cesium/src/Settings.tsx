@@ -32,7 +32,7 @@ export const Settings: FC = () => {
   useEffect(() => {
     clock.canAnimate = false
     clock.currentTime = JulianDate.fromDate(
-      new Date('2024-07-04T11:00:00+09:00')
+      new Date('2024-07-04T09:00:00+09:00')
     )
   }, [clock])
 
@@ -43,6 +43,12 @@ export const Settings: FC = () => {
     scene.globe.baseColor = Color.BLACK
     scene.globe.maximumScreenSpaceError = 1
     scene.globe.shadows = ShadowMode.RECEIVE_ONLY
+    scene.globe.enableLighting = true
+    scene.fog.enabled = true
+    scene.skyAtmosphere.saturationShift = -1
+    scene.skyAtmosphere.brightnessShift = -0.12
+    scene.globe.atmosphereSaturationShift = -1
+    scene.globe.atmosphereBrightnessShift = 1
 
     scene.shadowMap.enabled = true
     scene.shadowMap.size = 4096
