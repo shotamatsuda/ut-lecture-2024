@@ -139,7 +139,7 @@ export const Grass: FC = () => {
         receiveShadow
         castShadow
       >
-        <shapeGeometry args={[grass]} />
+        <shapeGeometry args={[grass, 6]} />
         <shaderMaterial
           ref={materialRef}
           args={[
