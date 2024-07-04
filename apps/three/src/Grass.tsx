@@ -2,9 +2,12 @@ import { Circle } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef, type FC } from 'react'
 import {
+  Color,
   DoubleSide,
   Object3D,
+  ShaderLib,
   Shape,
+  UniformsUtils,
   type InstancedMesh,
   type ShaderMaterial
 } from 'three'
@@ -17,29 +20,76 @@ grass.lineTo(0.1, 0)
 grass.bezierCurveTo(0.1, 0.5, -0.1, 1, -0.1, 1)
 grass.bezierCurveTo(0, 0.5, -0.1, 0, -0.1, 0)
 
+// See: https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderLib/meshphysical.glsl.js
 const vertexShader = /* glsl */ `
-varying vec2 vUv;
 uniform float uTime;
+
+#define STANDARD
+#define USE_INSTANCING
+
+varying vec3 vViewPosition;
+
+#ifdef USE_TRANSMISSION
+
+	varying vec3 vWorldPosition;
+
+#endif
+
+#include <common>
+#include <batching_pars_vertex>
+#include <uv_pars_vertex>
+#include <displacementmap_pars_vertex>
+#include <color_pars_vertex>
+#include <fog_pars_vertex>
+#include <normal_pars_vertex>
+#include <morphtarget_pars_vertex>
+#include <skinning_pars_vertex>
+#include <shadowmap_pars_vertex>
+#include <logdepthbuf_pars_vertex>
+#include <clipping_planes_pars_vertex>
 
 ${snoise}
 
 void main() {
-  vUv = uv;
+	#include <uv_vertex>
+	#include <color_vertex>
+	#include <morphcolor_vertex>
+	#include <batching_vertex>
 
-  vec4 vertex = instanceMatrix * vec4(position, 1.0);
+	#include <beginnormal_vertex>
+	#include <morphnormal_vertex>
+	#include <skinbase_vertex>
+	#include <skinnormal_vertex>
+	#include <defaultnormal_vertex>
+	#include <normal_vertex>
+
+	#include <begin_vertex>
+
+	#include <morphtarget_vertex>
+	#include <skinning_vertex>
+	#include <displacementmap_vertex>
+	#include <project_vertex>
+
+  // Animation
   float power = uv.y * uv.y;
-  float noise = snoise(vertex.xy * 0.05 + vec2(uTime));
-  vertex.x += power * noise;
-  gl_Position = projectionMatrix * modelViewMatrix * vertex;
-}
-`
+  float noise = snoise(mvPosition.xy * 0.05 + vec2(uTime));
+  mvPosition.x += power * noise;
+  gl_Position = projectionMatrix * mvPosition;
 
-const fragmentShader = /* glsl */ `
-varying vec2 vUv;
+	#include <logdepthbuf_vertex>
+	#include <clipping_planes_vertex>
 
-void main() {
-  float shade = vUv.y * 0.5 + 0.5;
-  gl_FragColor = vec4(vec3(0.7, 0.8, 0.4) * shade, 1.0);
+	vViewPosition = - mvPosition.xyz;
+
+	#include <worldpos_vertex>
+	#include <shadowmap_vertex>
+	#include <fog_vertex>
+
+#ifdef USE_TRANSMISSION
+
+	vWorldPosition = worldPosition.xyz;
+
+#endif
 }
 `
 
@@ -60,7 +110,7 @@ export const Grass: FC = () => {
       const t = Math.random() * Math.PI * 2
       instance.position.set(Math.cos(t) * r, Math.sin(t) * r, 0)
       instance.rotation.set(Math.PI / 2, Math.random() * Math.PI, 0)
-      instance.scale.setScalar(5)
+      instance.scale.setScalar(5 * (1 - 0.5 * Math.random()))
       instance.updateMatrix()
       mesh.setMatrixAt(i, instance.matrix)
     }
@@ -73,28 +123,36 @@ export const Grass: FC = () => {
     if (material == null) {
       return
     }
+    ;(material as any).isMeshStandardMaterial = true
     material.uniforms.uTime.value = clock.getElapsedTime()
     material.uniformsNeedUpdate = true
   })
 
   return (
     <group position={[0, 0, 40]}>
-      <Circle args={[radius]}>
-        <meshBasicMaterial color='yellowgreen' opacity={0.5} transparent />
+      <Circle args={[radius]} receiveShadow>
+        <meshStandardMaterial color='yellowgreen' />
       </Circle>
-      <instancedMesh ref={meshRef} args={[undefined, undefined, instanceCount]}>
+      <instancedMesh
+        ref={meshRef}
+        args={[undefined, undefined, instanceCount]}
+        receiveShadow
+        castShadow
+      >
         <shapeGeometry args={[grass]} />
         <shaderMaterial
           ref={materialRef}
           args={[
             {
-              fragmentShader,
               vertexShader,
-              uniforms: {
-                uTime: {
-                  value: 0
+              fragmentShader: ShaderLib.physical.fragmentShader,
+              uniforms: UniformsUtils.merge([
+                ShaderLib.standard.uniforms,
+                {
+                  diffuse: { value: new Color('yellowgreen') },
+                  uTime: { value: 0 }
                 }
-              }
+              ])
             }
           ]}
           side={DoubleSide}
