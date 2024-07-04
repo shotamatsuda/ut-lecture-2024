@@ -3077,6 +3077,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@googlemaps/polyline-codec@npm:^1.0.28":
+  version: 1.0.28
+  resolution: "@googlemaps/polyline-codec@npm:1.0.28"
+  checksum: 10c0/5bab11624e64c67ad0669c4a62bf1b82e875407c8110acbbf3e338bdcdf04cfe032addcfffc11dc033d635f81f11acc7c0d0f5205732fc3d151c8d65ebe8b9dd
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.14":
   version: 0.11.14
   resolution: "@humanwhocodes/config-array@npm:0.11.14"
@@ -6417,6 +6424,7 @@ __metadata:
     "@emotion/react": "npm:11.11.1"
     "@emotion/server": "npm:11.11.0"
     "@emotion/styled": "npm:11.11.0"
+    "@googlemaps/polyline-codec": "npm:^1.0.28"
     "@ianvs/prettier-plugin-sort-imports": "npm:^4.3.0"
     "@math.gl/core": "npm:^3.6.2"
     "@math.gl/geospatial": "npm:^3.6.2"
@@ -6443,6 +6451,7 @@ __metadata:
     "@types/three": "npm:^0.166.0"
     "@typescript-eslint/eslint-plugin": "npm:7.9.0"
     "@typescript-eslint/parser": "npm:7.9.0"
+    axios: "npm:^1.7.2"
     babel-jest: "npm:^29.4.1"
     date-fns: "npm:^3.6.0"
     eslint: "npm:8.57.0"
@@ -6464,6 +6473,7 @@ __metadata:
     maplibre-gl: "npm:^4.5.0"
     next: "npm:14.2.3"
     nx: "npm:19.3.2"
+    postprocessing: "npm:^6.35.5"
     prettier: "npm:^2.8.8"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
@@ -7286,7 +7296,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.6.0":
+"axios@npm:^1.6.0, axios@npm:^1.7.2":
   version: 1.7.2
   resolution: "axios@npm:1.7.2"
   dependencies:
@@ -15022,6 +15032,15 @@ __metadata:
   peerDependencies:
     three: ">= 0.138.0 < 0.160.0"
   checksum: 10c0/3202cafa3bd23b65271b57a25a2c184ab9217df76106a0200a84287d39bb578bb486a37637f94e0cf0a135e91bfa135954b81bd2763db1b6fe849b0fe7d807ce
+  languageName: node
+  linkType: hard
+
+"postprocessing@npm:^6.35.5":
+  version: 6.35.5
+  resolution: "postprocessing@npm:6.35.5"
+  peerDependencies:
+    three: ">= 0.152.0 < 0.166.0"
+  checksum: 10c0/2413d445cae82cd51f8dad939278e34c66b6514223d578e65dd89686d1fc28f7eb0868efbd34c36d9c6dcdf8bdd50ec6ea88705f3c45a52d950e8ddede80aaba
   languageName: node
   linkType: hard
 
