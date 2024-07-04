@@ -1,6 +1,15 @@
 import { Circle } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef, type FC } from 'react'
-import { DoubleSide, Object3D, Shape, type InstancedMesh } from 'three'
+import {
+  DoubleSide,
+  Object3D,
+  Shape,
+  type InstancedMesh,
+  type ShaderMaterial
+} from 'three'
+
+import snoise from './snoise.glsl'
 
 const grass = new Shape()
 grass.moveTo(-0.1, 0)
@@ -12,9 +21,16 @@ const vertexShader = /* glsl */ `
 varying vec2 vUv;
 uniform float uTime;
 
+${snoise}
+
 void main() {
   vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
+
+  vec4 vertex = instanceMatrix * vec4(position, 1.0);
+  float power = uv.y * uv.y;
+  float noise = snoise(vertex.xy * 0.05 + vec2(uTime));
+  vertex.x += power * noise;
+  gl_Position = projectionMatrix * modelViewMatrix * vertex;
 }
 `
 
@@ -51,6 +67,16 @@ export const Grass: FC = () => {
     mesh.instanceMatrix.needsUpdate = true
   }, [instanceCount])
 
+  const materialRef = useRef<ShaderMaterial>(null)
+  useFrame(({ clock }) => {
+    const material = materialRef.current
+    if (material == null) {
+      return
+    }
+    material.uniforms.uTime.value = clock.getElapsedTime()
+    material.uniformsNeedUpdate = true
+  })
+
   return (
     <group position={[0, 0, 40]}>
       <Circle args={[radius]}>
@@ -59,10 +85,16 @@ export const Grass: FC = () => {
       <instancedMesh ref={meshRef} args={[undefined, undefined, instanceCount]}>
         <shapeGeometry args={[grass]} />
         <shaderMaterial
+          ref={materialRef}
           args={[
             {
               fragmentShader,
-              vertexShader
+              vertexShader,
+              uniforms: {
+                uTime: {
+                  value: 0
+                }
+              }
             }
           ]}
           side={DoubleSide}
